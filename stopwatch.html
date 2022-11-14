@@ -1,0 +1,140 @@
+<!-- 
+    Josh Vahlberg
+    Web Development
+    HW6
+    11/13/2022
+    -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HW6 - JQuery</title>
+    <link rel="stylesheet" href="stopwatch.css">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js"
+        integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous">
+        </script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"
+        integrity="sha256-lSjKY0/srUM9BE3dPm+c4fBo1dky2v27Gdjm2uoZaL0=" crossorigin="anonymous">
+        </script>
+    <script>
+        $(function () {
+            var seconds = 00;
+            var tens = 00;
+            var $appendTens = $("#tens");
+            var $appendSeconds = $("#seconds");
+            var $buttonStart = $("#button-start");
+            var $buttonStop = $("#button-stop");
+            var $buttonReset = $("#button-reset");
+            var $timer = $("#timer");
+            var interval;
+            var buttonClass = "button";
+            var $body = $("body");
+
+            $timer.addClass("timer-background");
+            $timer.addClass("zeroed");
+
+            setInterval(animateBackground, 10);
+
+            $buttonStart.addClass(buttonClass);
+            $buttonStop.addClass(buttonClass);
+            $buttonReset.addClass(buttonClass);
+            
+
+            $buttonStart.click(function () {
+                clearInterval(interval);
+                interval = setInterval(startTimer, 10);
+                $timer.removeClass("paused");
+                $timer.removeClass("zeroed");
+                $timer.addClass("running");
+                animateTimer();
+            });
+
+            $buttonStop.click(function () {
+                clearInterval(interval);
+                if (tens != 0 || seconds != 0) {
+                    $timer.removeClass("running");
+                    $timer.addClass("paused");
+                }
+                $timer.stop();
+                $timer.css({
+                    opacity: 1
+                });
+            });
+
+            $buttonReset.click(function () {
+                clearInterval(interval);
+                tens = "00";
+                seconds = "00";
+                $appendTens.text(tens);
+                $appendSeconds.text(seconds);
+                $timer.removeClass("running");
+                $timer.removeClass("paused");
+                $timer.addClass("zeroed");
+                $timer.stop();
+                $timer.css({
+                    opacity: 1
+                });
+            });
+
+            function animateTimer() {
+                $timer.animate({
+                    opacity: 0.8
+                }, "slow");
+                $timer.animate({
+                    opacity: 1
+                }, "slow");
+            }
+            function animateBackground() {
+                $body.animate({
+                    backgroundColor: "yellow"
+                }, 50);
+                $body.animate({
+                    backgroundColor: "red"
+                }, 50);
+            }
+
+            function startTimer() {
+                tens++;
+                if (tens < 9) {
+                    $appendTens.text("0" + tens);
+                }
+
+                if (tens > 9) {
+                    $appendTens.text(tens);
+
+                }
+
+                if (tens > 99) {
+                    console.log(seconds);
+                    seconds++;
+                    $appendSeconds.text("0" + seconds);
+                    tens = 0;
+                    $appendTens.text("0" + tens);
+                }
+
+                if (seconds > 9) {
+                    $appendSeconds.text(seconds);
+                }
+                
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <h1>Stopwatch</h1>
+        <h3>Monty Python Credits Stopwatch</h3>
+        <p id="timer"><span id="seconds">00</span>:<span id="tens">00</span></p>
+        <div id="button-container">
+            <button id="button-start">Start</button>
+            <button id="button-stop">Stop</button>
+            <button id="button-reset">Reset</button>
+        </div>
+
+    </div>
+</body>
+
+</html>
